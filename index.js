@@ -1,4 +1,10 @@
 const bodyParser= require('body-parser')
+const https = require('https');
+const fs = require('fs');
+const options = {
+  key: fs.readFileSync('certificates/localhost-key.pem'),
+  cert: fs.readFileSync('certificates/localhost.pem')
+};
 
 var schedule = require('node-schedule');
 const restify = require('restify');
@@ -19,8 +25,11 @@ var adapter = new botbuilder.BotFrameworkAdapter({
   appPassword: "-E5UJDO~S~z5hXj3U2dz5m9gT3lcwmp_3J"
 });
 
-// Create HTTP server.
-let server = restify.createServer();
+// Create HTTPs server.
+let server = restify.createServer(options, (req, res) => {
+  res.writeHead(200);
+  res.end('hello world\n');
+});
 server.listen(process.env.port || process.env.PORT || 7070, function () {
   console.log(`\n${server.name} listening to ${server.url}`);
   console.log(`\nGet Bot Framework Emulator: https://aka.ms/botframework-emulator`);
@@ -66,6 +75,10 @@ server.post('/api/messages', (req, res) => {
 server.use(restify.plugins.bodyParser({ mapParams: true }));
 server.use(restify.plugins.bodyParser({ mapParams: true }));
 server.use(restify.plugins.acceptParser(server.acceptable));
+
+server.get('/', (req, res) => {
+  res.send("Hello");
+});
 
 server.post('/api/notification', (req, res) => {
   let content = req.body.content;
