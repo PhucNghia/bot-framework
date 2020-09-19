@@ -1,3 +1,5 @@
+const bodyParser= require('body-parser')
+
 var schedule = require('node-schedule');
 const restify = require('restify');
 const botbuilder = require('botbuilder');
@@ -8,7 +10,7 @@ rule.minute = 1;
 
 // schedule.scheduleJob(cronExpress, function(fireDate){
 //   console.log('running job!');
-//   console.log(fireDate)
+//   console.log(fireDate);
 // });
 
 // Create bot adapter, which defines how the bot sends and receives messages.
@@ -23,16 +25,27 @@ server.listen(process.env.port || process.env.PORT || 7070, function () {
   console.log(`\n${server.name} listening to ${server.url}`);
   console.log(`\nGet Bot Framework Emulator: https://aka.ms/botframework-emulator`);
 });
+var request = null;
+var response = null;
 
 // Listen for incoming requests at /api/messages.
 server.post('/api/messages', (req, res) => {
   // Use the adapter to process the incoming web request into a TurnContext object.
+  console.log("req: " + req);
+  console.log("res: " + res);
+  request = req;
+  response = res;
   adapter.processActivity(req, res, async (turnContext) => {
     let activity = turnContext.activity;
     console.log("activity type: " + activity.type);
     switch(activity.type) {
       case "conversationUpdate":
         await turnContext.sendActivity("Welcome!");
+        await turnContext.sendActivities([
+          { type: 'typing' },
+          { type: 'delay', value: 4000 },
+          { type: 'message', text: 'Hello... How are you?' }
+       ]);
         break;
       case "message":
         // Get the user's text
@@ -46,4 +59,20 @@ server.post('/api/messages', (req, res) => {
         break;
     }
   });
+});
+
+// ========================================================
+
+server.use(restify.plugins.bodyParser({ mapParams: true }));
+server.use(restify.plugins.bodyParser({ mapParams: true }));
+server.use(restify.plugins.acceptParser(server.acceptable));
+
+server.post('/api/notification', (req, res) => {
+  let content = req.body.content;
+  console.log("Content: " + content);
+  adapter.processActivity(request, response, async (turnContext) => {
+    await turnContext.sendActivity(content);
+  });
+  
+  res.send("send");
 });
