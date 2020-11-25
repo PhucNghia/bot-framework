@@ -1,0 +1,33 @@
+t=2020-11-25T18:24:36+0700 lvl=info msg="starting web service" obj=web addr=127.0.0.1:4040
+t=2020-11-25T18:24:37+0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2020-11-25T18:24:37+0700 lvl=info msg="client session established" obj=csess id=a0f450b63a7d
+t=2020-11-25T18:24:37+0700 lvl=info msg="started tunnel" obj=tunnels name="bot-framework (http)" addr=http://localhost:7070 url=http://02e25cc18232.ngrok.io
+t=2020-11-25T18:24:37+0700 lvl=info msg="started tunnel" obj=tunnels name=bot-framework addr=http://localhost:7070 url=https://02e25cc18232.ngrok.io
+t=2020-11-25T18:45:46+0700 lvl=info msg="starting web service" obj=web addr=127.0.0.1:4040
+t=2020-11-25T18:45:47+0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2020-11-25T18:45:47+0700 lvl=info msg="client session established" obj=csess id=f683f506ed51
+t=2020-11-25T18:45:48+0700 lvl=info msg="started tunnel" obj=tunnels name="bot-framework (http)" addr=http://localhost:7070 url=http://0e6b8eb34a8f.ngrok.io
+t=2020-11-25T18:45:48+0700 lvl=info msg="started tunnel" obj=tunnels name=bot-framework addr=http://localhost:7070 url=https://0e6b8eb34a8f.ngrok.io
+t=2020-11-25T18:54:09+0700 lvl=info msg="join connections" obj=join id=908eb3a47ae7 l=127.0.0.1:7070 r=14.160.64.198:8369
+t=2020-11-25T18:55:16+0700 lvl=info msg="join connections" obj=join id=7f963adbdbc2 l=127.0.0.1:7070 r=52.114.159.141:31680
+t=2020-11-25T18:55:49+0700 lvl=info msg="join connections" obj=join id=c02e4e9fdca9 l=127.0.0.1:7070 r=52.114.159.141:29184
+t=2020-11-25T18:56:12+0700 lvl=info msg="join connections" obj=join id=480d1c50e816 l=127.0.0.1:7070 r=52.114.159.141:30208
+t=2020-11-25T18:57:41+0700 lvl=info msg="join connections" obj=join id=fb96ee5ca37f l=127.0.0.1:7070 r=52.114.159.141:1216
+t=2020-11-25T18:59:57+0700 lvl=info msg="join connections" obj=join id=859c24ebe2b0 l=127.0.0.1:7070 r=52.114.159.141:15872
+t=2020-11-25T19:01:48+0700 lvl=info msg="join connections" obj=join id=5a499091856d l=127.0.0.1:7070 r=52.114.159.141:15872
+t=2020-11-25T19:02:41+0700 lvl=info msg="join connections" obj=join id=3f1ee8788ecc l=127.0.0.1:7070 r=52.114.159.141:5440
+t=2020-11-25T19:05:28+0700 lvl=info msg="join connections" obj=join id=8569d8ff66ac l=127.0.0.1:7070 r=14.160.64.198:10064
+t=2020-11-25T19:30:24+0700 lvl=info msg="join connections" obj=join id=9dac9258dd6a l=127.0.0.1:7070 r=52.114.159.141:22976
+t=2020-11-25T19:30:31+0700 lvl=info msg="join connections" obj=join id=fb6d372007d3 l=127.0.0.1:7070 r=52.114.159.141:34240
+t=2020-11-25T19:30:42+0700 lvl=info msg="join connections" obj=join id=c06cf9a9ee72 l=127.0.0.1:7070 r=52.114.159.141:34240
+t=2020-11-25T19:30:57+0700 lvl=info msg="join connections" obj=join id=8923a5785106 l=127.0.0.1:7070 r=52.114.159.141:28608
+t=2020-11-25T19:31:05+0700 lvl=info msg="join connections" obj=join id=bc5ddbfbaea0 l=127.0.0.1:7070 r=52.114.159.141:28608
+t=2020-11-25T19:31:16+0700 lvl=info msg="join connections" obj=join id=ca7d115a0804 l=127.0.0.1:7070 r=52.114.159.141:5440
+t=2020-11-25T19:31:30+0700 lvl=info msg="join connections" obj=join id=706b50fc8497 l=127.0.0.1:7070 r=52.114.159.141:26048
+t=2020-11-25T19:32:32+0700 lvl=info msg="join connections" obj=join id=08eaba17d282 l=127.0.0.1:7070 r=52.114.159.141:14784
+t=2020-11-25T20:01:32+0700 lvl=info msg="join connections" obj=join id=b0dab9638298 l=127.0.0.1:7070 r=52.114.159.141:15296
+t=2020-11-25T21:38:54+0700 lvl=eror msg="heartbeat timeout, terminating session" obj=csess id=2c26c81624c5 clientid=fd02b48fe83820a5206acad799aaee5f
+t=2020-11-25T21:38:54+0700 lvl=eror msg="session closed, starting reconnect loop" obj=csess id=f683f506ed51 err="session closed"
+t=2020-11-25T21:38:55+0700 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2020-11-25T21:38:56+0700 lvl=info msg="client session established" obj=csess id=f683f506ed51
+t=2020-11-25T22:00:43+0700 lvl=info msg="join connections" obj=join id=a0e2656b8066 l=127.0.0.1:7070 r=52.114.159.141:31744

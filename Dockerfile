@@ -1,4 +1,6 @@
 from node:12
+ENV TZ="Asia/Ho_Chi_Minh"
+RUN date
 RUN mkdir /code
 workdir /code
 COPY package*.json ./

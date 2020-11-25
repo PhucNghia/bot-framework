@@ -1,0 +1,7 @@
+authtoken: 1jH6F4znwyYtiuj1WIksEpMOvR1_7NCTjT8YN7kwt2cAnWA51
+log: /home/ubuntu/home_resources/docker/ngrok-bot.log
+bind_tls: false
+tunnels:
+  bot-framework:
+    addr: 7070
+    proto: http
