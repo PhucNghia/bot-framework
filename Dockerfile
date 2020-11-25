@@ -1,5 +1,6 @@
 from node:12
-workdir /stc/node-docker
+RUN mkdir /code
+workdir /code
 COPY package*.json ./
 
 RUN npm install

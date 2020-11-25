@@ -1,0 +1,10 @@
+version: '2'
+services:
+  server:
+    build: .
+    command: npm start
+    volumes:
+      - .:/code
+    ports:
+      - "7070:7070"
+    image: ngocnghia97/bot-framework-compose
