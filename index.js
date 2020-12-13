@@ -3,7 +3,7 @@ var schedule = require('node-schedule');
 const restify = require('restify');
 const botbuilder = require('botbuilder');
 
-// Bot-mini
+// Bot-reminder
 var adapter = new botbuilder.BotFrameworkAdapter({
   appId: "a27f1a12-e74a-40cb-8141-479c794a9316",
   appPassword: "GpdWQ9c075.lVEI_ln-ZAQm9wX_AsD3sy5"
@@ -17,13 +17,14 @@ server.listen(process.env.port || process.env.PORT || 7070, function () {
   console.log(`\nGet Bot Framework Emulator: https://aka.ms/botframework-emulator`);
 });
 
-var requestInfo = null;
-var responseInfo = null;
-
 // Listen for incoming requests at /api/messages.
 server.post('/api/messages', (req, res) => {
-  requestInfo = req;
-  responseInfo = res;
+  console.log("\n" + new Date() + "-------------------\n");
+  console.log("id: " + req.params.id);
+  console.log("conversation_id: " + req.params.conversation.id);
+  console.log("from_id: " + req.params.from.id)
+  console.log("from_name: " + req.params.from.name)
+  console.log("\n-------------------\n");
   adapter.processActivity(req, res, async (turnContext) => {
     let activity = turnContext.activity;
     console.log(new Date() + ": activity type: " + activity.type);
@@ -34,14 +35,13 @@ server.post('/api/messages', (req, res) => {
           // await turnContext.sendActivity("Em là bot mới đc tạo. Em qua đây để giúp mọi người nhớ thời gian log work vào Thứ 5 hàng tuần ạ. Em sẽ nhắc mọi người vào 9h và 16h ạ (happyeyes)");
           console.log(new Date() + ": Add bot to group");
         } catch (error) {
-          requestInfo = responseInfo = null;
           console.log(new Date() + ": Removed this Bot");
         }
         break;
       case "message":
         const utterance = activity.text;
-        if(utterance !== "reminder reload") {
-          await turnContext.sendActivity(`Chúc bạn một ngày tốt lành (happyeyes). Mình đã nghe thấy bạn nói: ${ utterance.replace('reminder ', '') }`);
+        if(utterance !== "reminder reload" && !utterance.includes("all")) {
+          // await turnContext.sendActivity(`Chúc bạn một ngày tốt lành (happyeyes). Mình đã nghe thấy bạn nói: ${ utterance.replace('reminder ', '') }`);
           console.log(new Date() + ": Replied");
         } else {
           console.log(new Date() + ": Bot is Reloaded");
@@ -64,7 +64,7 @@ server.get('/', (req, res) => {
 
 // var cronExpress = '*/15 * * * * * *';  // 15s chạy 1 lần
 // var cronExpress = '0 5 8 * * THU';     // 8h30p thứ năm hàng tuần
-var cronExpressMorning = '0 30 08 * * THU';
+var cronExpressMorning = '0 00 09 * * THU';
 var cronExpressAfternoon = '0 00 16 * * THU';
 var cronExpress = '*/10 * * * * * *';  // 15s chạy 1 lần
 
@@ -87,27 +87,50 @@ schedule.scheduleJob(cronExpressAfternoon, function(fireDate) {
 });
 
 var processJob = function(content) {
-  if(requestInfo == null || responseInfo == null) {
-    return;
-  }
   try {
     request.post('http://localhost:7070/api/notification', {form: {content: content}})  
   } catch (error) {
-    console.log(new Date() + ": Job is has error");  
+    console.log(new Date() + ": Job is has error");
   }
-  
 }
 
 server.post('/api/notification', (req, res) => {
   let content = req.body.content;
+  console.log("\n" + new Date() + "-------------------\n");
   console.log(new Date() + ": Content: " + content);
-  try {
-    adapter.processActivity(requestInfo, responseInfo, async (turnContext) => {
-      await turnContext.sendActivity(content);
+  console.log("\n-------------------\n");
+
+  let token = "";
+  request.post('https://login.microsoftonline.com/botframework.com/oauth2/v2.0/token', {
+    form: {
+      "grant_type": "client_credentials",
+      "client_id": "a27f1a12-e74a-40cb-8141-479c794a9316",
+      "client_secret": "GpdWQ9c075.lVEI_ln-ZAQm9wX_AsD3sy5",
+      "scope": "https://api.botframework.com/.default"
+    }
+  }, function (err, httpResponse, body) {
+    body = JSON.parse(body);
+    token =  'Bearer ' + body.access_token;
+    console.log("token: " + token);
+
+    // ONE-Home group
+    data = {
+      "type": "message",
+      "text": content
+    }
+    var oneHomeGroup = {
+      method: 'POST',
+      body: data,
+      json: true,
+      url: 'https://smba.trafficmanager.net/apis/v3/conversations/19:2cb0f313075e4f7995ff346e3e96a569@thread.skype/activities/1607959826425',
+      headers: {
+        'Authorization': token
+      }
+    };
+    request.post(oneHomeGroup, function(err, httpResponse, body) {
     });
     res.send("sent: " + content);
-  } catch (error) {
-    console.log(new Date() + ": Removed this Bot. request and response are null");
-    res.send("Removed this Bot. request and response are null");
-  }
+  });
 });
+
+
