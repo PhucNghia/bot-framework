@@ -66,6 +66,7 @@ server.get('/', (req, res) => {
 // var cronExpress = '0 5 8 * * THU';     // 8h30p thứ năm hàng tuần
 var cronExpressMorning = '0 00 09 * * THU';
 var cronExpressAfternoon = '0 00 16 * * THU';
+var cronExpressFinalOfWeek = '0 00 08 * * FRI';
 var cronExpress = '*/10 * * * * * *';  // 15s chạy 1 lần
 
 // schedule.scheduleJob(cronExpress, function(fireDate) {
@@ -75,16 +76,23 @@ var cronExpress = '*/10 * * * * * *';  // 15s chạy 1 lần
 // });
 
 schedule.scheduleJob(cronExpressMorning, function(fireDate) {
-  let content = "Hôm nay là thứ 5 rồi. Cả nhà log work nhé (happyface)";
+  let content = "Hôm nay là thứ 5 rồi. Cả nhà log work nhé (tropicalfish)";
   processJob(content);
   console.log("run schedule morning: " + fireDate);
 });
 
 schedule.scheduleJob(cronExpressAfternoon, function(fireDate) {
-  let content = "Sắp tới giờ về rồi. Cả nhà đừng quên log work nhé (sweatgrinning)";
+  let content = "Sắp tới giờ về rồi. Cả nhà đừng quên log work nhé (dolphin)";
   processJob(content);
   console.log("run schedule afternoon: " + fireDate);
 });
+
+schedule.scheduleJob(cronExpressFinalOfWeek, function(fireDate) {
+  let content = "Còn ai chưa log work thì tranh thủ log luôn đi nhé (unicorn)";
+  processJob(content);
+  console.log("run schedule thriday's morning: " + fireDate);
+});
+
 
 var processJob = function(content) {
   try {
@@ -109,11 +117,12 @@ server.post('/api/notification', (req, res) => {
       "scope": "https://api.botframework.com/.default"
     }
   }, function (err, httpResponse, body) {
+    // ONE-Home group
     body = JSON.parse(body);
     token =  'Bearer ' + body.access_token;
     console.log("token: " + token);
+    conversiationId = '19:2cb0f313075e4f7995ff346e3e96a569@thread.skype';
 
-    // ONE-Home group
     data = {
       "type": "message",
       "text": content
@@ -122,7 +131,7 @@ server.post('/api/notification', (req, res) => {
       method: 'POST',
       body: data,
       json: true,
-      url: 'https://smba.trafficmanager.net/apis/v3/conversations/19:2cb0f313075e4f7995ff346e3e96a569@thread.skype/activities/1607959826425',
+      url: 'https://smba.trafficmanager.net/apis/v3/conversations/' + conversiationId + '/activities/1607959826425',
       headers: {
         'Authorization': token
       }
