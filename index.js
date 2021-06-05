@@ -3,10 +3,17 @@ var schedule = require('node-schedule');
 const restify = require('restify');
 const botbuilder = require('botbuilder');
 
+// Bot-reminder (containt clientId)
+var clientSecret = {
+  clientId: "a27f1a12-e74a-40cb-8141-479c794a9316",
+  secretId: "816007f2-0b63-4bef-bac0-20973af1f06b",
+  value: "_.93i_HFH31y1-fuG5m2PIs.V3h2Qba122"
+};
+
 // Bot-reminder
 var adapter = new botbuilder.BotFrameworkAdapter({
-  appId: "a27f1a12-e74a-40cb-8141-479c794a9316",
-  appPassword: "GpdWQ9c075.lVEI_ln-ZAQm9wX_AsD3sy5"
+  appId: clientSecret.clientId,
+  appPassword: clientSecret.value
 });
 
 // Create HTTP server
@@ -24,7 +31,7 @@ server.post('/api/messages', (req, res) => {
   console.log("conversation_id: " + req.params.conversation.id);
   console.log("from_id: " + req.params.from.id)
   console.log("from_name: " + req.params.from.name)
-  console.log("\n-------------------\n");
+ 
   adapter.processActivity(req, res, async (turnContext) => {
     let activity = turnContext.activity;
     console.log(new Date() + ": activity type: " + activity.type);
@@ -40,16 +47,18 @@ server.post('/api/messages', (req, res) => {
         break;
       case "message":
         const utterance = activity.text;
-        if(utterance !== "reminder reload" && !utterance.includes("all")) {
+        if(!utterance.includes("all")) {
           // await turnContext.sendActivity(`Chúc bạn một ngày tốt lành (happyeyes). Mình đã nghe thấy bạn nói: ${ utterance.replace('reminder ', '') }`);
-          console.log(new Date() + ": Replied");
+          console.log(new Date() + ": Replied, content: " + utterance);
+          await turnContext.sendActivity(`Xin chào bạn ${ req.params.from.name } nhé (happyeyes)`);
         } else {
-          console.log(new Date() + ": Bot is Reloaded");
+          console.log(new Date() + ": Bot is Reloaded, content: " + utterance);          
         }
         break;
       default:
         break;
     }
+    console.log("\n-------------------\n");
   });
 });
 
@@ -59,11 +68,10 @@ server.use(restify.plugins.bodyParser({ mapParams: true }));
 server.use(restify.plugins.acceptParser(server.acceptable));
 
 server.get('/', (req, res) => {
+  processJob(req.boby.content, req.boby.conversiationId);
   res.send("Hello");
 });
 
-// var cronExpress = '*/15 * * * * * *';  // 15s chạy 1 lần
-// var cronExpress = '0 5 8 * * THU';     // 8h30p thứ năm hàng tuần
 var cronExpressMorning = '0 00 09 * * THU';
 var cronExpressAfternoon = '0 00 16 * * THU';
 var cronExpressFinalOfWeek = '0 00 08 * * FRI';
@@ -74,54 +82,54 @@ var cronExpress = '*/10 * * * * * *';  // 15s chạy 1 lần
 //   processJob(content);
 //   console.log("send content is empty: " + fireDate);
 // });
-
+let conversiationReminderId = '19:2cb0f313075e4f7995ff346e3e96a569@thread.skype'; // Bot-reminder
 schedule.scheduleJob(cronExpressMorning, function(fireDate) {
   let content = "Hôm nay là thứ 5 rồi. Cả nhà log work nhé (tropicalfish)";
-  processJob(content);
+  processJob(content, conversiationReminderId);
   console.log("run schedule morning: " + fireDate);
 });
 
 schedule.scheduleJob(cronExpressAfternoon, function(fireDate) {
   let content = "Sắp tới giờ về rồi. Cả nhà đừng quên log work nhé (dolphin)";
-  processJob(content);
+  processJob(content, conversiationReminderId);
   console.log("run schedule afternoon: " + fireDate);
 });
 
 schedule.scheduleJob(cronExpressFinalOfWeek, function(fireDate) {
   let content = "Còn ai chưa log work thì tranh thủ log luôn đi nhé (unicorn)";
-  processJob(content);
+  processJob(content, conversiationReminderId);
   console.log("run schedule thriday's morning: " + fireDate);
 });
 
 
-var processJob = function(content) {
+var processJob = function(content, conversiationId) {
   try {
-    request.post('http://localhost:7070/api/notification', {form: {content: content}})  
+    request.post('http://localhost:7070/api/notification', {form: {content: content, conversiationId: conversiationId}})  
   } catch (error) {
-    console.log(new Date() + ": Job is has error");
+    console.log(new Date() + ": Job is has error" + error);
   }
 }
 
 server.post('/api/notification', (req, res) => {
   let content = req.body.content;
+  let conversiationId = req.body.conversiationId;
   console.log("\n" + new Date() + "-------------------\n");
-  console.log(new Date() + ": Content: " + content);
-  console.log("\n-------------------\n");
+  console.log("conversionId: " + conversiationId);
+  console.log("Content: " + content);
 
   let token = "";
   request.post('https://login.microsoftonline.com/botframework.com/oauth2/v2.0/token', {
     form: {
       "grant_type": "client_credentials",
-      "client_id": "a27f1a12-e74a-40cb-8141-479c794a9316",
-      "client_secret": "GpdWQ9c075.lVEI_ln-ZAQm9wX_AsD3sy5",
+      "client_id": clientSecret.clientId,
+      "client_secret": clientSecret.value,
       "scope": "https://api.botframework.com/.default"
     }
   }, function (err, httpResponse, body) {
     // ONE-Home group
     body = JSON.parse(body);
-    token =  'Bearer ' + body.access_token;
+    token = 'Bearer ' + body.access_token;
     console.log("token: " + token);
-    conversiationId = '19:2cb0f313075e4f7995ff346e3e96a569@thread.skype';
 
     data = {
       "type": "message",
@@ -138,6 +146,7 @@ server.post('/api/notification', (req, res) => {
     };
     request.post(oneHomeGroup, function(err, httpResponse, body) {
     });
+    console.log("\n-------------------\n");
     res.send("sent: " + content);
   });
 });
