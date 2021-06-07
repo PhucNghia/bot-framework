@@ -3,14 +3,15 @@ var schedule = require('node-schedule');
 const restify = require('restify');
 const botbuilder = require('botbuilder');
 
-// Bot-reminder (containt clientId)
+// Pet
 var clientSecret = {
-  clientId: "a27f1a12-e74a-40cb-8141-479c794a9316",
-  secretId: "816007f2-0b63-4bef-bac0-20973af1f06b",
-  value: "_.93i_HFH31y1-fuG5m2PIs.V3h2Qba122"
+  clientId: "c3a25c8a-6019-40d5-a548-3f7a31f75415",
+  secretId: "fde994fe-896e-4999-b042-3731daba7c91", // ko dung
+  value: "E.BC8w3LN9-awx5qZH3~4TstN5c_6k2-de"
 };
+let conversiationScheduleId = '19:ceb3d4c7ea254528b50769ec922a8e72@thread.skype'; // Pet for schedule (STC - Chém gió)
 
-// Bot-reminder
+// Pet
 var adapter = new botbuilder.BotFrameworkAdapter({
   appId: clientSecret.clientId,
   appPassword: clientSecret.value
@@ -19,7 +20,7 @@ var adapter = new botbuilder.BotFrameworkAdapter({
 // Create HTTP server
 let server = restify.createServer();
 
-server.listen(process.env.port || process.env.PORT || 7070, function () {
+server.listen(process.env.port || process.env.PORT || 6060, function () {
   console.log(`\n${server.name} listening to ${server.url}`);
   console.log(`\nGet Bot Framework Emulator: https://aka.ms/botframework-emulator`);
 });
@@ -68,13 +69,14 @@ server.use(restify.plugins.bodyParser({ mapParams: true }));
 server.use(restify.plugins.acceptParser(server.acceptable));
 
 server.get('/', (req, res) => {
-  processJob(req.boby.content, req.boby.conversiationId);
   res.send("Hello");
 });
 
 var cronExpressMorning = '0 00 09 * * THU';
 var cronExpressAfternoon = '0 00 16 * * THU';
 var cronExpressFinalOfWeek = '0 00 08 * * FRI';
+var cronExpressDailyMorning = '00 30 08 * * *';
+var cronExpressDailyAftenoon = '00 30 15 * * *';
 var cronExpress = '*/10 * * * * * *';  // 15s chạy 1 lần
 
 // schedule.scheduleJob(cronExpress, function(fireDate) {
@@ -82,29 +84,39 @@ var cronExpress = '*/10 * * * * * *';  // 15s chạy 1 lần
 //   processJob(content);
 //   console.log("send content is empty: " + fireDate);
 // });
-let conversiationReminderId = '19:2cb0f313075e4f7995ff346e3e96a569@thread.skype'; // Bot-reminder
 schedule.scheduleJob(cronExpressMorning, function(fireDate) {
   let content = "Hôm nay là thứ 5 rồi. Cả nhà log work nhé (tropicalfish)";
-  processJob(content, conversiationReminderId);
+  processJob(content, conversiationScheduleId);
   console.log("run schedule morning: " + fireDate);
 });
 
 schedule.scheduleJob(cronExpressAfternoon, function(fireDate) {
   let content = "Sắp tới giờ về rồi. Cả nhà đừng quên log work nhé (dolphin)";
-  processJob(content, conversiationReminderId);
+  processJob(content, conversiationScheduleId);
   console.log("run schedule afternoon: " + fireDate);
 });
 
 schedule.scheduleJob(cronExpressFinalOfWeek, function(fireDate) {
   let content = "Còn ai chưa log work thì tranh thủ log luôn đi nhé (unicorn)";
-  processJob(content, conversiationReminderId);
+  processJob(content, conversiationScheduleId);
   console.log("run schedule thriday's morning: " + fireDate);
 });
 
+schedule.scheduleJob(cronExpressDailyMorning, function(fireDate) {
+  let content = "ACE cập nhật link covid ngày hôm nay nhé \n https://docs.google.com/spreadsheets/d/1lDGO7zbNfFQU7RClmzFORsWRWM4L9RDeTd7vl2-QHco/edit#gid=0";
+  processJob(content, conversiationScheduleId);
+  console.log("run schedule daily: " + fireDate);
+});
+
+schedule.scheduleJob(cronExpressDailyAftenoon, function(fireDate) {
+  let content = "ACE ai chưa cập nhật link covid thì cập nhật nhé \n https://docs.google.com/spreadsheets/d/1lDGO7zbNfFQU7RClmzFORsWRWM4L9RDeTd7vl2-QHco/edit#gid=0";
+  processJob(content, conversiationScheduleId);
+  console.log("run schedule daily: " + fireDate);
+});
 
 var processJob = function(content, conversiationId) {
   try {
-    request.post('http://localhost:7070/api/notification', {form: {content: content, conversiationId: conversiationId}})  
+    request.post('http://localhost:6060/api/notification', {form: {content: content, conversiationId: conversiationId}})  
   } catch (error) {
     console.log(new Date() + ": Job is has error" + error);
   }
@@ -150,5 +162,3 @@ server.post('/api/notification', (req, res) => {
     res.send("sent: " + content);
   });
 });
-
-
