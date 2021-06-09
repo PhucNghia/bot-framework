@@ -75,8 +75,10 @@ server.get('/', (req, res) => {
 var cronExpressMorning = '0 00 09 * * THU';
 var cronExpressAfternoon = '0 00 16 * * THU';
 var cronExpressFinalOfWeek = '0 00 08 * * FRI';
-var cronExpressDailyMorning = '00 30 08 * * *';
-var cronExpressDailyAftenoon = '00 30 15 * * *';
+var cronExpressDailyMorning = '00 30 08 * * MON-FRI';   // cập nhật covid
+var cronExpressDailyAftenoon = '00 30 15 * * MON-FRI';  // cập nhật covid
+var cronExpressDailyAftenoon2 = '00 10 16 * * MON-FRI';  // cập nhật covid
+var cronExpressDailyexercise = '00 00 17 * * MON-FRI';  // tập thể dục
 var cronExpress = '*/10 * * * * * *';  // 15s chạy 1 lần
 
 // schedule.scheduleJob(cronExpress, function(fireDate) {
@@ -103,7 +105,9 @@ schedule.scheduleJob(cronExpressFinalOfWeek, function(fireDate) {
 });
 
 schedule.scheduleJob(cronExpressDailyMorning, function(fireDate) {
-  let content = "ACE cập nhật link covid ngày hôm nay nhé \n https://docs.google.com/spreadsheets/d/1lDGO7zbNfFQU7RClmzFORsWRWM4L9RDeTd7vl2-QHco/edit#gid=0";
+  let day = new Date().getDay();
+  let monthDay = day == 1 ? " T7, CN và " : " ";
+  let content = "ACE cập nhật link covid ngày" + monthDay + "hôm nay nhé \n https://docs.google.com/spreadsheets/d/1lDGO7zbNfFQU7RClmzFORsWRWM4L9RDeTd7vl2-QHco/edit#gid=0";
   processJob(content, conversiationScheduleId);
   console.log("run schedule daily: " + fireDate);
 });
@@ -112,6 +116,18 @@ schedule.scheduleJob(cronExpressDailyAftenoon, function(fireDate) {
   let content = "ACE ai chưa cập nhật link covid thì cập nhật nhé \n https://docs.google.com/spreadsheets/d/1lDGO7zbNfFQU7RClmzFORsWRWM4L9RDeTd7vl2-QHco/edit#gid=0";
   processJob(content, conversiationScheduleId);
   console.log("run schedule daily: " + fireDate);
+});
+
+schedule.scheduleJob(cronExpressDailyAftenoon2, function(fireDate) {
+  let content = "ACE ai chưa cập nhật link covid thì cập nhật nhé \n https://docs.google.com/spreadsheets/d/1lDGO7zbNfFQU7RClmzFORsWRWM4L9RDeTd7vl2-QHco/edit#gid=0";
+  processJob(content, conversiationScheduleId);
+  console.log("run schedule daily: " + fireDate);
+});
+
+schedule.scheduleJob(cronExpressDailyexercise, function(fireDate) {
+  let content = "Đã tới giờ tập thể dục rồi, ACE hãy nhấc mông dậy tập để nâng cao sức khỏe, đẩy lùi covid nhé (xd)";
+  processJob(content, conversiationScheduleId);
+  console.log("run exercise daily: " + fireDate);
 });
 
 var processJob = function(content, conversiationId) {
