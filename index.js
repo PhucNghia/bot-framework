@@ -51,7 +51,13 @@ server.post('/api/messages', (req, res) => {
         if(!utterance.includes("all")) {
           // await turnContext.sendActivity(`Chúc bạn một ngày tốt lành (happyeyes). Mình đã nghe thấy bạn nói: ${ utterance.replace('reminder ', '') }`);
           console.log(new Date() + ": Replied, content: " + utterance);
-          await turnContext.sendActivity(`Xin chào bạn ${ req.params.from.name } nhé (happyeyes)`);
+          if(req.params.from.name.includes("Đặng Quí Long") || req.params.from.name.includes("Bui Minh Yen")) {
+            await turnContext.sendActivity("Hê's lô phó's lãnh đạo " + `${ req.params.from.name } (happyeyes)`);  
+          } else if(req.params.from.name.includes("Trung Nguyen")) {
+            await turnContext.sendActivity("Hê's lô sếp " + `${ req.params.from.name } (happyeyes)`);  
+          } else {
+            await turnContext.sendActivity("Hê's lô bạn " + `${ req.params.from.name } (happyeyes)`);
+          }
         } else {
           console.log(new Date() + ": Bot is Reloaded, content: " + utterance);          
         }
@@ -74,7 +80,7 @@ server.get('/', (req, res) => {
 
 var cronExpressMorning = '0 00 09 * * THU';
 var cronExpressAfternoon = '0 00 16 * * THU';
-var cronExpressFinalOfWeek = '0 00 08 * * FRI';
+var cronExpressFinalOfWeek = '0 15 08 * * FRI';
 var cronExpressDailyMorning = '00 30 08 * * MON-FRI';   // cập nhật covid
 var cronExpressDailyAftenoon = '00 30 15 * * MON-FRI';  // cập nhật covid
 var cronExpressDailyAftenoon2 = '00 10 16 * * MON-FRI';  // cập nhật covid
@@ -86,49 +92,50 @@ var cronExpress = '*/10 * * * * * *';  // 15s chạy 1 lần
 //   processJob(content);
 //   console.log("send content is empty: " + fireDate);
 // });
-schedule.scheduleJob(cronExpressMorning, function(fireDate) {
-  let content = "Hôm nay là thứ 5 rồi. Cả nhà log work nhé (tropicalfish)";
+schedule.scheduleJob(cronExpressFinalOfWeek, function(fireDate) {
+  let content = "(tropicalfish)(tropicalfish)(tropicalfish)\n\tHôm nay là thứ 6 rồi. Cả nhà log work nhé";
   processJob(content, conversiationScheduleId);
+
   console.log("run schedule morning: " + fireDate);
 });
 
-schedule.scheduleJob(cronExpressAfternoon, function(fireDate) {
-  let content = "Sắp tới giờ về rồi. Cả nhà đừng quên log work nhé (dolphin)";
-  processJob(content, conversiationScheduleId);
-  console.log("run schedule afternoon: " + fireDate);
-});
+// schedule.scheduleJob(cronExpressAfternoon, function(fireDate) {
+//   let content = "Sắp tới giờ về rồi. Cả nhà đừng quên log work nhé (dolphin)";
+//   processJob(content, conversiationScheduleId);
+//   console.log("run schedule afternoon: " + fireDate);
+// });
 
-schedule.scheduleJob(cronExpressFinalOfWeek, function(fireDate) {
-  let content = "Còn ai chưa log work thì tranh thủ log luôn đi nhé (unicorn)";
-  processJob(content, conversiationScheduleId);
-  console.log("run schedule thriday's morning: " + fireDate);
-});
+// schedule.scheduleJob(cronExpressFinalOfWeek, function(fireDate) {
+//   let content = "Còn ai chưa log work thì tranh thủ log luôn đi nhé (unicorn)";
+//   processJob(content, conversiationScheduleId);
+//   console.log("run schedule thriday's morning: " + fireDate);
+// });
 
-schedule.scheduleJob(cronExpressDailyMorning, function(fireDate) {
-  let day = new Date().getDay();
-  let monthDay = day == 1 ? " T7, CN và " : " ";
-  let content = "ACE cập nhật link covid ngày" + monthDay + "hôm nay nhé \n https://docs.google.com/spreadsheets/d/1lDGO7zbNfFQU7RClmzFORsWRWM4L9RDeTd7vl2-QHco/edit#gid=0";
-  processJob(content, conversiationScheduleId);
-  console.log("run schedule daily: " + fireDate);
-});
+// schedule.scheduleJob(cronExpressDailyMorning, function(fireDate) {
+//   let day = new Date().getDay();
+//   let monthDay = day == 1 ? " T7, CN và " : " ";
+//   let content = "ACE cập nhật link covid ngày" + monthDay + "hôm nay nhé \n https://docs.google.com/spreadsheets/d/1lDGO7zbNfFQU7RClmzFORsWRWM4L9RDeTd7vl2-QHco/edit#gid=0";
+//   processJob(content, conversiationScheduleId);
+//   console.log("run schedule daily: " + fireDate);
+// });
 
-schedule.scheduleJob(cronExpressDailyAftenoon, function(fireDate) {
-  let content = "ACE ai chưa cập nhật link covid thì cập nhật nhé \n https://docs.google.com/spreadsheets/d/1lDGO7zbNfFQU7RClmzFORsWRWM4L9RDeTd7vl2-QHco/edit#gid=0";
-  processJob(content, conversiationScheduleId);
-  console.log("run schedule daily: " + fireDate);
-});
+// schedule.scheduleJob(cronExpressDailyAftenoon, function(fireDate) {
+//   let content = "ACE ai chưa cập nhật link covid thì cập nhật nhé \n https://docs.google.com/spreadsheets/d/1lDGO7zbNfFQU7RClmzFORsWRWM4L9RDeTd7vl2-QHco/edit#gid=0";
+//   processJob(content, conversiationScheduleId);
+//   console.log("run schedule daily: " + fireDate);
+// });
 
-schedule.scheduleJob(cronExpressDailyAftenoon2, function(fireDate) {
-  let content = "ACE ai chưa cập nhật link covid thì cập nhật nhé \n https://docs.google.com/spreadsheets/d/1lDGO7zbNfFQU7RClmzFORsWRWM4L9RDeTd7vl2-QHco/edit#gid=0";
-  processJob(content, conversiationScheduleId);
-  console.log("run schedule daily: " + fireDate);
-});
+// schedule.scheduleJob(cronExpressDailyAftenoon2, function(fireDate) {
+//   let content = "ACE ai chưa cập nhật link covid thì cập nhật nhé \n https://docs.google.com/spreadsheets/d/1lDGO7zbNfFQU7RClmzFORsWRWM4L9RDeTd7vl2-QHco/edit#gid=0";
+//   processJob(content, conversiationScheduleId);
+//   console.log("run schedule daily: " + fireDate);
+// });
 
-schedule.scheduleJob(cronExpressDailyexercise, function(fireDate) {
-  let content = "Đã tới giờ tập thể dục rồi, ACE hãy nhấc mông dậy tập để nâng cao sức khỏe, đẩy lùi covid nhé (xd)";
-  processJob(content, conversiationScheduleId);
-  console.log("run exercise daily: " + fireDate);
-});
+// schedule.scheduleJob(cronExpressDailyexercise, function(fireDate) {
+//   let content = "Đã tới giờ tập thể dục rồi, ACE hãy nhấc mông dậy tập để nâng cao sức khỏe, đẩy lùi covid nhé (xd)";
+//   processJob(content, conversiationScheduleId);
+//   console.log("run exercise daily: " + fireDate);
+// });
 
 var processJob = function(content, conversiationId) {
   try {
