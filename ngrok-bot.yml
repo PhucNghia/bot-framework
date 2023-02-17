@@ -1,0 +1,8 @@
+authtoken: 2HfLxVziUyonQjkRk1v3yUaUgiK_7oYqbDyXow7YUCf9fryju
+log: /home/ubuntu/home_resources/bot_onehome/ngrok-bot.log
+version: 1
+bind_tls: false
+tunnels:
+  bot-framework:
+    addr: 7070
+    proto: http

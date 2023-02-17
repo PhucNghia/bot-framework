@@ -1,0 +1,8 @@
+#authtoken: 1td5exJhRpMWDxVeZ4hWO0PKGLP_3k3MeXtLr8fBhYBPYYGC3
+authtoken: 2HfLxVziUyonQjkRk1v3yUaUgiK_7oYqbDyXow7YUCf9fryju
+log: /home/ubuntu/home_resources/bot_onehome/stc/ngrok-stc.log
+bind_tls: false
+tunnels:
+  stc:
+    addr: 6060 
+    proto: http
