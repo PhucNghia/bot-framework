@@ -3,13 +3,17 @@ var schedule = require('node-schedule');
 const restify = require('restify');
 const botbuilder = require('botbuilder');
 
+const conversiationScheduleId = '19:ceb3d4c7ea254528b50769ec922a8e72@thread.skype'; // Pet for schedule (STC - Chém gió)
+const CAP_NHAT_BAO_CAO_TUAN_GROUP_ID = 'xxx'; // Id của group Cập nhật Báo Cáo Tuần
+const MOBILE_TEAM_GROUP_ID = '19:c79c6819227c48f185873e16d2aa4ec2@thread.skype'; // Id của group Mobile Team
+
 // Pet
 var clientSecret = {
   clientId: "c3a25c8a-6019-40d5-a548-3f7a31f75415",
   secretId: "fde994fe-896e-4999-b042-3731daba7c91", // ko dung
   value: "E.BC8w3LN9-awx5qZH3~4TstN5c_6k2-de"
 };
-let conversiationScheduleId = '19:ceb3d4c7ea254528b50769ec922a8e72@thread.skype'; // Pet for schedule (STC - Chém gió)
+
 
 // Pet
 var adapter = new botbuilder.BotFrameworkAdapter({
@@ -80,11 +84,12 @@ server.get('/', (req, res) => {
 
 var cronExpressMorning = '0 00 09 * * THU';
 var cronExpressAfternoon = '0 00 16 * * THU';
-var cronExpressFinalOfWeek = '0 15 08 * * FRI';
+var cronExpressFinalOfWeek = '0 15 08 * * FRI';         // log work
 var cronExpressDailyMorning = '00 30 08 * * MON-FRI';   // cập nhật covid
 var cronExpressDailyAftenoon = '00 30 15 * * MON-FRI';  // cập nhật covid
 var cronExpressDailyAftenoon2 = '00 10 16 * * MON-FRI';  // cập nhật covid
 var cronExpressDailyexercise = '00 00 17 * * MON-FRI';  // tập thể dục
+var cronExpressDailyMeeting = '00 45 17 * * MON-FRI';  // daily meeting one home
 var cronExpress = '*/10 * * * * * *';  // 15s chạy 1 lần
 
 // schedule.scheduleJob(cronExpress, function(fireDate) {
@@ -93,11 +98,19 @@ var cronExpress = '*/10 * * * * * *';  // 15s chạy 1 lần
 //   console.log("send content is empty: " + fireDate);
 // });
 schedule.scheduleJob(cronExpressFinalOfWeek, function(fireDate) {
-  let content = "(tropicalfish)(tropicalfish)(tropicalfish)\n\tHôm nay là thứ 6 rồi. Cả nhà log work nhé";
+  let content = "Hôm nay là thứ 6 rồi. Cả nhà log work nhé\n(tropicalfish)(tropicalfish)(tropicalfish)";
   processJob(content, conversiationScheduleId);
 
   console.log("run schedule morning: " + fireDate);
 });
+
+schedule.scheduleJob(cronExpressDailyMeeting, function(fireDate) {
+  let content = "Mọi người cập nhật trạng thái công việc ngày hôm nay nhé\nhttps://docs.google.com/spreadsheets/d/1yvAJp93nd6WdTkCMnQ0ZQRBZew2gmxL0hbPfWtT0Io4/edit#gid=1198474019";
+  processJob(content, MOBILE_TEAM_GROUP_ID);
+
+  console.log("run schedule morning: " + fireDate);
+});
+
 
 // schedule.scheduleJob(cronExpressAfternoon, function(fireDate) {
 //   let content = "Sắp tới giờ về rồi. Cả nhà đừng quên log work nhé (dolphin)";
