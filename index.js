@@ -10,8 +10,8 @@ const MOBILE_TEAM_GROUP_ID = '19:c79c6819227c48f185873e16d2aa4ec2@thread.skype';
 // Pet
 var clientSecret = {
   clientId: "c3a25c8a-6019-40d5-a548-3f7a31f75415",
-  secretId: "fde994fe-896e-4999-b042-3731daba7c91", // ko dung
-  value: "E.BC8w3LN9-awx5qZH3~4TstN5c_6k2-de"
+  secretId: "e05fe993-f0a0-4414-817f-047b253fedd8", // ko dung
+  value: "Td-8Q~MbbX2YufJBXOUZ9Y.McUNqNRrhQwA13bQ0"
 };
 
 
@@ -89,7 +89,7 @@ var cronExpressDailyMorning = '00 30 08 * * MON-FRI';   // cập nhật covid
 var cronExpressDailyAftenoon = '00 30 15 * * MON-FRI';  // cập nhật covid
 var cronExpressDailyAftenoon2 = '00 10 16 * * MON-FRI';  // cập nhật covid
 var cronExpressDailyexercise = '00 00 17 * * MON-FRI';  // tập thể dục
-var cronExpressDailyMeeting = '00 45 17 * * MON-FRI';  // daily meeting one home
+var cronExpressDailyMeeting = '00 45 16 * * MON-FRI';  // daily meeting one home
 var cronExpress = '*/10 * * * * * *';  // 15s chạy 1 lần
 
 // schedule.scheduleJob(cronExpress, function(fireDate) {
